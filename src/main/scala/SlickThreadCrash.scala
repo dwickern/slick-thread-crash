@@ -18,7 +18,7 @@ object SlickThreadCrash {
 
     for (run <- 1 to 50) {
       Using.resource(Database.forConfig("db")) { db =>
-        val graph = Source.lazySource(() => Source.fromPublisher(db.stream(numbers)))
+        val graph = Source.fromPublisher(db.stream(numbers))
           .mapAsync(parallelism = 5 /* parallelism >= numThreads */) { i =>
             db.run(sql"values ($i)".as[Int].head)
           }
